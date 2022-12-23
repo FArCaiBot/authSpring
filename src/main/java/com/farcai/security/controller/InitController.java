@@ -1,4 +1,4 @@
-package com.farcai.security;
+package com.farcai.security.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

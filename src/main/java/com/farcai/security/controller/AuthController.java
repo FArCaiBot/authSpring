@@ -22,6 +22,8 @@ import com.farcai.security.model.Rol;
 import com.farcai.security.model.Usuario;
 import com.farcai.security.repository.RolRepository;
 import com.farcai.security.repository.UsuarioRepository;
+import com.farcai.security.security.JWTAuthResponseDTO;
+import com.farcai.security.security.JwtTokenProvider;
 
 @RestController
 @RequestMapping("/auth")
@@ -39,14 +41,19 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     @PostMapping("/login")
-    public ResponseEntity<String> authenticateUser(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<JWTAuthResponseDTO> authenticateUser(@RequestBody LoginDTO loginDTO) {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
+        // obtenemos el token del jwtTokenProvider
+        String token = jwtTokenProvider.generarToken(authentication);
 
-        return new ResponseEntity<>("Ha iniciado sesión con éxito", HttpStatus.OK);
+        return ResponseEntity.ok(new JWTAuthResponseDTO(token, "Bearer"));
     }
 
     @PostMapping("signup")
