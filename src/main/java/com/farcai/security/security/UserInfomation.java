@@ -54,7 +54,7 @@ public class UserInfomation implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return usuario.isAccountVerified();
     }
 
 }
